@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Números Primos - Visualización</title>
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #0a0a0f;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+  canvas {
+    border-radius: 12px;
+    box-shadow: 0 0 60px rgba(0, 200, 255, 0.08);
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+  .info {
+    color: #8899aa;
+    font-size: 14px;
+    margin-top: 16px;
+    text-align: center;
+  }
+  .info span {
+    color: #00c8ff;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="info"><span>●</span> primos  &nbsp;·&nbsp;  espiral de Ulam</div>
+<script>
+const SIZE = 701;
+const scale = 1;
+const r = Math.floor(SIZE / 2);
+
+const canvas = document.getElementById('c');
+canvas.width = SIZE * scale;
+canvas.height = SIZE * scale;
+const ctx = canvas.getContext('2d');
+ctx.scale(scale, scale);
+
+function isPrime(n) {
+  if (n < 2) return false;
+  if (n === 2) return true;
+  if (n % 2 === 0) return false;
+  for (let i = 3; i * i <= n; i += 2) {
+    if (n % i === 0) return false;
+  }
+  return true;
+}
+
+ctx.fillStyle = '#0a0a0f';
+ctx.fillRect(0, 0, SIZE, SIZE);
+
+let x = r, y = r;
+let stepSize = 1, stepsRemaining = 1, dir = 0, dirChanges = 0;
+const dx = [1, 0, -1, 0];
+const dy = [0, -1, 0, 1];
+
+for (let n = 1; n <= SIZE * SIZE; n++) {
+  if (isPrime(n)) {
+    ctx.fillStyle = '#00c8ff';
+    ctx.fillRect(x, y, 1, 1);
+  }
+  x += dx[dir];
+  y += dy[dir];
+  stepsRemaining--;
+  if (stepsRemaining === 0) {
+    dir = (dir + 1) % 4;
+    dirChanges++;
+    if (dirChanges % 2 === 0) stepSize++;
+    stepsRemaining = stepSize;
+  }
+}
+</script>
+</body>
+</html>
